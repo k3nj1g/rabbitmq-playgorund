@@ -1,0 +1,36 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure     {:mvn/version "1.11.1"}
+        com.novemberain/langohr {:mvn/version "5.4.0"}}
+ :aliases
+ {:run-m           {:main-opts ["-m" "k3nj1g.training"]}
+  :send            {:ns-default k3nj1g.training
+                    :exec-fn    send-message
+                    :exec-args  {:name "Clojure"}}
+  :rcv             {:ns-default k3nj1g.training
+                    :exec-fn    receive-message
+                    :exec-args  {:name "Clojure"}}
+  :produce         {:ns-default k3nj1g.producer
+                    :exec-fn    send-messages
+                    :exec-args  {:name "Clojure"}}
+  :consume-error   {:ns-default k3nj1g.producer
+                    :exec-fn    start-consumer
+                    :exec-args  {:routing-keys ["error"]}}
+  :consume-warning {:ns-default k3nj1g.producer
+                    :exec-fn    start-consumer
+                    :exec-args  {:routing-keys ["warning"]}}
+  :consume-info    {:ns-default k3nj1g.producer
+                    :exec-fn    start-consumer
+                    :exec-args  {:routing-keys ["info"]}}
+  :consume-all     {:ns-default k3nj1g.producer
+                    :exec-fn    start-consumer
+                    :exec-args  {:routing-keys ["error" "warning" "info"]}}
+  :build           {:deps       {io.github.seancorfield/build-clj {:git/tag   "v0.8.2"
+                                                                   :git/sha   "0ffdb4c"
+                  ;; since we're building an app uberjar, we do not
+                  ;; need deps-deploy for clojars.org deployment:
+                                                                   :deps/root "slim"}}
+                    :ns-default build}
+  :test            {:extra-paths ["test"]
+                    :extra-deps  {org.clojure/test.check               {:mvn/version "1.1.1"}
+                                  io.github.cognitect-labs/test-runner {:git/tag "v0.5.0"
+                                                                        :git/sha "48c3c67"}}}}}
